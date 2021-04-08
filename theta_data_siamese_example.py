@@ -1,15 +1,16 @@
 """
-This is a modified version of the Keras mnist example.
-https://keras.io/examples/mnist_cnn/
+Original code by A Spamers here: https://github.com/aspamers/siamese/blob/master/mnist_siamese_example.py commit: 7b48475 
+Modified by Lex Flagel so it would work with the "theta" data from here: https://github.com/flag0010/pop_gen_cnn/tree/master/theta. 
 
-Instead of using a fixed number of epochs this version continues to train until a stop criteria is reached.
+A siamese neural network is used to pre-train an embedding for the network. The original code was designed to show that the embedding
+improved prediction on MNIST hand-written digits. So it had an output vector of size 10, which corresponded to the digits 0-9.  
+It's been modified so that the output is binary, and corresponds to whether or not the the pair of matrices being contrasted are a simple
+permutation of one another, or are two distinct matricies. 
 
-A siamese neural network is used to pre-train an embedding for the network. The resulting embedding is then extended
-with a softmax output layer for categorical predictions.
-
-Model performance should be around 99.84% after training. The resulting model is identical in structure to the one in
-the example yet shows considerable improvement in relative error confirming that the embedding learned by the siamese
-network is useful.
+The "theta" matrices are all 489 rows, 40 cols, but they have different number of seg. sites. Thus they have been padded with zeros
+to make them a common size. Care has been taken to pair all the contrasts (i.e. permutation vs different matrix) so that they have the
+same number of seg. sites and same extent of padding. This makes is so that the CNN can't simply learn to count seg sites to easily distinguish
+permutations from distinct matrices. The code that handles this pairing is in the "siamese_nucvar.py" library that is imported below.
 """
 
 from __future__ import print_function
@@ -26,11 +27,11 @@ from siamese_nucvar import SiameseNetwork
 batch_size = 32
 epochs = 8
 
-# input image dimensions
+
 a = np.load('theta_sim.npz')
 x_train, x_test = [a[i] for i in ['xtrain', 'xtest']]
 
-#print(x_train[1].shape)
+# input image dimensions
 img_rows, img_cols = x_train[1].shape[0], x_train[1].shape[1]
 print(img_cols, img_rows)
 
@@ -98,6 +99,9 @@ siamese_network.fit(x_train, x_test,
 
 siamese_network.save('8.epoch.test')
 
+#below is code that could be used to swap a softmax output in for the sigmoid one used above. 
+#original author (A Spamers) was intersted in making class predictions, but I was only interested in embeddings
+#so I didn't concern my self much with trying to improve the "head" part of this model.
 
 # Add softmax layer to the pre-trained embedding network
 # embedding = Dense(num_classes)(embedding)
