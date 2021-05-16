@@ -7,7 +7,7 @@ stats = stats[,-1]
 features = features[,-1]
 
 cca = cc(features, stats) #from CCA pkg
-comput(features, stats, cca)[3:6] #correlations between 
+loadings = comput(features, stats, cca)[3:6] #correlations between 
 
 cca2 = cancor(features, stats) #R builtin func
 
