@@ -16,7 +16,7 @@ ccy = as.matrix(stats) %*% cca2$ycoef # and these are the 3 Y canonical variates
 cca2$cor #correlations between X and Y canonical variates
 
 t(cor(ccx, features)) #correlation between X variables (features), and X canonical variates
-#same as below using CCA pkg, at least subject to axis rotation (e.g. -0.19, vs 0.19, as in PCA)
+#same as above using CCA pkg, at least subject to axis rotation (e.g. -0.19, vs 0.19, as in PCA)
 #also comput func. gives all pairwise X canon var vs X var, Y vs X, and Y vs Y, and X vs Y
 
 
